@@ -1,48 +1,4 @@
 
-// axis oriented box
-public class Box {
-  public float[] p0; // lower left corner
-  public float[] p1; // upper right corner
-  public Box() {
-    p0 = new float[3];
-    p1 = new float[3];
-    for(int i = 0; i < 3; i++)
-    {
-      p0[i] = 1e10;
-      p1[i] = -1e10;
-    }
-  }
-  // translate box by x,y,z
-  public void translate(float x, float y, float z)
-  {
-    p0[0] += x;p0[1] += y; p0[2] += z;
-    p1[0] += x;p1[1] += y; p1[2] += z;  
-  }
-  // compute smallest box containing this box and another box
-  public Box union(Box autre)
-  {
-      Box ret = new Box();
-      for(int i = 0; i < 3; i++)
-      {
-        ret.p0[i] = Math.min(autre.p0[i],p0[i]); 
-        ret.p1[i] = Math.max(autre.p1[i],p1[i]);
-      }
-      return ret;  
-  }
-  // check for intersection with another box
-  public boolean intersecte(Box autre)
-  {
-    for(int i = 0; i < 3; i++)
-    {
-     if(autre.p0[i] > p1[i] || autre.p1[i] < p0[i]) { return false; }
-    }
-     return true;
-  }
-  
-  public String toString() {
-   return "(" + p0[0] + "," + p0[1] + "," + p0[2] + ")/(" + p1[0] + "," + p1[1] + "," + p1[2] + ")";
-  }
-}
 
 public class triangleSTL {
   float[][] s;
@@ -129,22 +85,17 @@ public class solidSTL {
   }
   
   // retourne un cube contenant le solide
-  public Box boundingBox() {
-    Iterator<triangleSTL> it = listeTriangles.iterator();
-    Box ret = new Box();
-    while(it.hasNext())
+  public PolygoneConvexe enveloppe() {
+    List<Point> p = new ArrayList<Point>(3*listeTriangles.size());
+    for(int i = 0; i < listeTriangles.size(); i++)
     {
-      triangleSTL t = it.next();
-      for(int i = 0; i < 3; i++)
+      triangleSTL t = listeTriangles.get(i);
+      for(int d = 0; d < 3; d++)
       {
-        for(int j = 0; j < 3; ++j)
-        {      
-          ret.p0[i] = Math.min(ret.p0[i],t.s[j][i]);
-          ret.p1[i] = Math.max(ret.p1[i],t.s[j][i]);
-        }
+        p.add(new Point(t.s[d][0],t.s[d][1]));
       }
     }  
-    return ret;
+    return new PolygoneConvexe(p);
   }  
 }
 

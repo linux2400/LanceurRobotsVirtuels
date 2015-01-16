@@ -1,30 +1,11 @@
-// JFP
 
-robotMartien robot = new robotMartien();
-
-void setup() {
-  robot.initialise();
-  thread("programme");
-}
-
-void draw() {
- robot.paint();
- //if (frameCount % 10 == 0) println(frameRate);
-}
-
-void mouseDragged() {
-  robot.onMouseDragged();
-}
-
-void mouseWheel(MouseEvent event) {
-  float e = event.getCount();
-  robot.onMouseWheel(e);
-}
-
-void programme() {
+void programmeRomain() {
+  RobotMartien robot = new RobotMartien();
+  robot.initialise(0.0, -30.0, 0.0 , 0.);
+  
   while(true) {
     robot.vitesse(50); // defini la vitesse du robot
-    delay(2000); // attend avat le prochain ordre
+    delay(2000); // attend avant le prochain ordre
     robot.tourne(PI/4.0);
     delay(2000);
     robot.vitesse(0);

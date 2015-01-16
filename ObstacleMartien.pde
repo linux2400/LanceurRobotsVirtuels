@@ -5,13 +5,13 @@ public class ObstacleMartien {
   // geometrie
   solidSTL obstacle3D;
   // enveloppe
-  public Box boundingBox;
+  public PolygoneConvexe enveloppe;
   
   // constructeur
   public ObstacleMartien() {
     
   }
-  
+
   public void initialise(float _x, float _y, float _z) {
    
     // chargement des fichiers
@@ -23,8 +23,8 @@ public class ObstacleMartien {
     y = _y;
     z = _z;
    
-    boundingBox = obstacle3D.boundingBox(); 
-    boundingBox.translate(x,y,z);
+    enveloppe = obstacle3D.enveloppe(); 
+    enveloppe.translate(new Point(x,y));
   }    
   public void affiche() {
     fill(200);
@@ -32,6 +32,8 @@ public class ObstacleMartien {
     translate(x, y, z);
     obstacle3D.affiche();
     popMatrix();    
+    noFill();
+    enveloppe.affiche();
   }
 }
 

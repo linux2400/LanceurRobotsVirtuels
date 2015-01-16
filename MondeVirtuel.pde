@@ -54,26 +54,8 @@ public class MondeVirtuel {
     // avance la simu en temps
     Iterator<RobotMartien> iterator = robots.iterator();
     while (iterator.hasNext()) {
-      RobotMartien r = iterator.next();
-      // test for collisions with obstacles
-      Iterator<ObstacleMartien> iterator2 = obstacles.iterator();
-      boolean boum = false;
-      while(iterator2.hasNext())
-      {
-        println(r.boundingBox.toString());
-        ObstacleMartien o = iterator2.next();
-        println(o.boundingBox.toString());
-        if(r.boundingBox.intersecte(o.boundingBox))
-        {
-          boum = true;
-        }        
-      }
-      if(!boum)
-      {
-        r.deplace(dt);
-      } else {
-        println("collision!");         
-      }
+      // le test de collision se fait maintenant dans la fonction "deplace".
+      iterator.next().deplace(dt);
     }
     // affiche les objets
     background(0);
@@ -87,6 +69,20 @@ public class MondeVirtuel {
     while (iterator2.hasNext()) {
       iterator2.next().affiche();
     }
+  }
+
+  boolean testeCollision(PolygoneConvexe enveloppe) {
+    // test for collisions with obstacles
+    Iterator<ObstacleMartien> iterator2 = obstacles.iterator();
+    while(iterator2.hasNext())
+    {
+      ObstacleMartien o = iterator2.next();
+      if(enveloppe.intersecte(o.enveloppe))
+      {
+        return true;
+      }        
+    }
+    return false;  
   }
   
   // evenements souris
@@ -117,6 +113,7 @@ public class MondeVirtuel {
   void afficheSol() {
     beginShape();
     texture(textureSol);
+    fill(255);
     //rect(0, 0, size_x, size_y); // en fait on fait suivant x et z a cause du rotate
     vertex(-size_x/2.0, -size_y/2.0, 0, 0);
     vertex(size_x/2.0, -size_y/2.0, 1, 0);
