@@ -1,8 +1,11 @@
+RobotMartien robotRomain = new RobotMartien();
+
+void initialiseRomain() {
+  robotRomain.initialise(0.0, -30.0, 0.0 , 0.);
+}
 
 void programmeRomain() {
-  RobotMartien robot = new RobotMartien();
-  robot.initialise(0.0, -30.0, 0.0 , 0.);
-  
+  RobotMartien robot = robotRomain;
   while(true) {
     robot.vitesse(50); // defini la vitesse du robot
     delay(2000); // attend avant le prochain ordre

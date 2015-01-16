@@ -36,7 +36,9 @@ void setup() {
   Iterator<String> it = nom_robots.iterator();
   while(it.hasNext())
   {
-    thread("programme" + it.next());
+    String s = it.next();
+    method("initialise" + s);
+    thread("programme" + s);
   }
 }
 
