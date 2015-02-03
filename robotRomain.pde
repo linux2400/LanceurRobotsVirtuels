@@ -4,7 +4,7 @@ void programmeRomain() {
   int toto = 0;
 
   // bloc initialisation
-  robot.initialise(50.0, -50.0, 0.0 , 0.);
+  robot.initialise(50.0, -50.0, 0.0 , -200);
   
   while(true) {
     // bloc de la boucle programme principale

@@ -22,9 +22,8 @@ public class ObstacleMartien {
     x = _x;
     y = _y;
     z = _z;
-   
     enveloppe = obstacle3D.enveloppe(); 
-    enveloppe.translate(new Point(x,y));
+    enveloppe.translate(x,y);
   }    
   public void affiche() {
     fill(200);

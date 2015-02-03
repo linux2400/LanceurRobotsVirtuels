@@ -39,9 +39,11 @@ public class RobotMartien {
     angleRoues = 0.0;
     xRouesAvant = 2.0*80.0 / facteur;
     yRouesAvant = 40.0 / facteur;
+    
     // calcul du plus petit cube contenant le robot   
     enveloppe = corps3D.enveloppe().union(roueDroite3D.enveloppe()).union(roueGauche3D.enveloppe());
-    enveloppe.translate(new Point(x,y));
+    enveloppe.translate(x,y);
+    enveloppe.tourne(x,y,Rz);
     
     // construction du faisceau
     ArrayList<Point> f = new ArrayList<Point>(3);
@@ -49,7 +51,8 @@ public class RobotMartien {
     f.add(new Point(200,-80));
     f.add(new Point(200,80));
     faisceau = new PolygoneConvexe(f);
-    faisceau.translate(new Point(x,y));
+    faisceau.translate(x,y);
+    faisceau.tourne(x,y,Rz);
     
     // ajouter le robot au monde
     monde.ajoute(this);
@@ -63,6 +66,7 @@ public class RobotMartien {
     pushMatrix();
     translate(xRouesAvant, yRouesAvant);
     rotate(angleRoues);
+    fill(200);
     roueDroite3D.affiche();
     popMatrix();
     pushMatrix();
@@ -79,12 +83,17 @@ public class RobotMartien {
     fill(0,255,0);
     faisceau.affiche();
     noFill();
+
   }
   public void vitesse(int V) {
+    noLoop();
     vitesse = V;
+    loop();
   }
   public void tourne(float _angle) {
+    noLoop();
     angleRoues = constrain(radians(_angle), -PI/4.0, PI/4.0);
+    loop();
   }
   
   public void deplace(float dt) {
@@ -92,23 +101,25 @@ public class RobotMartien {
     double dRz = dt * sin(angleRoues) * vitesse / xRouesAvant;
     double dx = vitesse*cos(Rz)*dt;
     double dy = vitesse*sin(Rz)*dt; 
-    // deplacement de l'enveloppe convexe
-    enveloppe.translate(new Point(dx,dy));
-    enveloppe.tourne(x,y,dRz);
-    // tests de collision
+    // translation de l'enveloppe
+    enveloppe.translate(dx,dy);
+    enveloppe.tourne(x+dx,y+dy,dRz);
     if(monde.testeCollision(enveloppe))
     {
-      // on a une collision : annulation du deplacement
-      enveloppe.tourne(x,y,-dRz);
-      enveloppe.translate(new Point(-dx,-dy));
+      // collision! pas de deplacement
+      enveloppe.tourne(x+dx,y+dy,-dRz);
+      enveloppe.translate(-dx,-dy);
     } else {
       // pas de collision
-      faisceau.translate(new Point(dx,dy));
-      faisceau.tourne(x,y,dRz);          
-      Rz +=dRz;
+      faisceau.translate(dx,dy);
+      faisceau.tourne(x+dx,y+dy,dRz);      
+      Rz += dRz;
       x += dx;
       y += dy;
-    }
+    } 
   }
+  
+  
+  
 }
 

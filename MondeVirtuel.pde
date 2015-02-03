@@ -82,6 +82,19 @@ public class MondeVirtuel {
         return true;
       }        
     }
+    
+    // test for collisions with other robots
+    Iterator<RobotMartien> iterator3 = robots.iterator();
+    while(iterator3.hasNext())
+    {
+      RobotMartien o = iterator3.next();
+      if(o.enveloppe != enveloppe && enveloppe.intersecte(o.enveloppe))
+      {
+        return true;
+      }        
+    }
+    
+    
     return false;  
   }
   

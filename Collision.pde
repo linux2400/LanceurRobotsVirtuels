@@ -119,20 +119,32 @@ public List<Point> enveloppeConvexe(List<Point> points)
 public class PolygoneConvexe {
   List<Point> sommets;
   
+  public PolygoneConvexe() {
+    sommets = new ArrayList<Point>();
+  }
+  
   public PolygoneConvexe(List<Point> v) {
     sommets = enveloppeConvexe(v);
   }
   
+  public PolygoneConvexe clone() {
+    PolygoneConvexe ret = new PolygoneConvexe();
+    Iterator<Point> it = sommets.iterator();
+    while(it.hasNext()) {
+      Point p = it.next();
+      ret.sommets.add(new Point(p.x[0],p.x[1]));  
+    }
+    return ret;
+  }
+  
   // translate polygon
-  public void translate(Point dx)
+  public void translate(double dx, double dy)
   {
     Iterator<Point> it = sommets.iterator();
     while(it.hasNext()) {
       Point p = it.next();
-      for(int d = 0; d < D; d++)
-      {
-          p.x[d] += dx.x[d];
-      }
+      p.x[0] += dx;
+      p.x[1] += dy;
     }
   }
   
@@ -142,8 +154,10 @@ public class PolygoneConvexe {
     Iterator<Point> it = sommets.iterator();
     while(it.hasNext()) {
       Point p = it.next();
-      p.x[0] = c0 + (p.x[0]-c0)*Math.cos(alpha) - (p.x[1]-c1)*Math.sin(alpha);
-      p.x[1] = c1 + (p.x[0]-c0)*Math.sin(alpha) + (p.x[1]-c1)*Math.cos(alpha);
+      double x = p.x[0];
+      double y = p.x[1];
+      p.x[0] = c0 + (x-c0)*Math.cos(alpha) - (y-c1)*Math.sin(alpha);
+      p.x[1] = c1 + (x-c0)*Math.sin(alpha) + (y-c1)*Math.cos(alpha);
     }
   }
   

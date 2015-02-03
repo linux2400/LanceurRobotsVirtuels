@@ -36,6 +36,7 @@ void setup() {
   {
     String s = it.next();
     thread("programme" + s);
+    delay(10);
     println(s);
   }
 }
