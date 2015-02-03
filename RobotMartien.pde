@@ -33,7 +33,7 @@ public class RobotMartien {
     x = _x;
     y = _y;
     z = _z;
-    Rz = _Rz;   
+    Rz = radians(_Rz);   
     // initialisation vitesse et angle des roues
     vitesse = 0.;
     angleRoues = 0.0;
@@ -84,7 +84,7 @@ public class RobotMartien {
     vitesse = V;
   }
   public void tourne(float _angle) {
-    angleRoues = constrain(_angle, -PI/4.0, PI/4.0);
+    angleRoues = constrain(radians(_angle), -PI/4.0, PI/4.0);
   }
   
   public void deplace(float dt) {

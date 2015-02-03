@@ -1,6 +1,4 @@
-// JFP
 
-RobotMartien robotGenerique = new RobotMartien();
 MondeVirtuel monde = new MondeVirtuel();
 ObstacleMartien caillou = new ObstacleMartien();
 
@@ -37,14 +35,14 @@ void setup() {
   while(it.hasNext())
   {
     String s = it.next();
-    method("initialise" + s);
     thread("programme" + s);
+    println(s);
   }
 }
 
 void draw() {
  monde.paint();
- //if (frameCount % 10 == 0) println(frameRate);
+ if (frameCount % 10 == 0) println(frameRate);
 }
 
 void mouseDragged() {
