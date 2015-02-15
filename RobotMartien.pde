@@ -19,6 +19,11 @@ public class RobotMartien {
     
   }
   
+  public void initialise()
+  {
+     initialise(0.0, -150.0, 0.0 , 90); 
+  }
+  
   public void initialise(float _x, float _y, float _z, float _Rz) {
   
     // chargement des fichiers
@@ -56,6 +61,8 @@ public class RobotMartien {
     
     // ajouter le robot au monde
     monde.ajoute(this);
+    
+    delay(3000);
   }    
   public void affiche() {
     fill(200);
@@ -90,11 +97,15 @@ public class RobotMartien {
     vitesse = V;
     loop();
   }
-  public void tourne(float _angle) {
+  public void tourne(int _angle) {
     noLoop();
+    _angle = constrain(_angle,-18,18);
     angleRoues = constrain(radians(_angle), -PI/4.0, PI/4.0);
     loop();
   }
+  public boolean obstacle() {
+    return (monde.testeCollision(faisceau));
+}
   
   public void deplace(float dt) {
     // deplace entre t et t+dt

@@ -6,6 +6,7 @@ import java.util.Iterator;
 public class MondeVirtuel {
   // pas de temps simulation
   float dt;
+  float tprec, tactu;
   // nombre d'images par secondes
   int fRate;
   // position camera
@@ -47,7 +48,8 @@ public class MondeVirtuel {
     // vitesse affichage
     frameRate(fRate);
     // pas de temps simulation
-    dt = 1.0 / fRate;
+    //dt = 1.0 / fRate;
+    tprec = millis();
   }
   // fonction qui est appelle a chaque affichage
   void paint() {
@@ -55,7 +57,10 @@ public class MondeVirtuel {
     Iterator<RobotMartien> iterator = robots.iterator();
     while (iterator.hasNext()) {
       // le test de collision se fait maintenant dans la fonction "deplace".
+      tactu = millis();
+      dt = (tactu - tprec)/1000.0;      
       iterator.next().deplace(dt);
+      tprec = tactu;
     }
     // affiche les objets
     background(0);
@@ -88,7 +93,7 @@ public class MondeVirtuel {
     while(iterator3.hasNext())
     {
       RobotMartien o = iterator3.next();
-      if(o.enveloppe != enveloppe && enveloppe.intersecte(o.enveloppe))
+      if(o.enveloppe != enveloppe && o.faisceau != enveloppe && enveloppe.intersecte(o.enveloppe))
       {
         return true;
       }        

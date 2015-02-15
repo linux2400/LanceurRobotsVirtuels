@@ -1,21 +1,35 @@
-void programmeJF() {
-  
-  // bloc des variables
-  RobotMartien robotmartien = new RobotMartien();
-  int toto = 0;
+/*
+ code généré pour PROCESSING par UniBot!!! 
+*/
 
-  // bloc initialisation
-  robotmartien.initialise(-150.0, -50, 0.0 , 60.0);
-  
-  while(true) {
-    // bloc de la boucle principale
-    
-   robotmartien.vitesse(50);
-   delay( 2000 );
-   robotmartien.tourne(60);
-   delay( 1000 );
-   robotmartien.tourne(0);
+//declaration des variables
+RobotMartien robotmartien_JF = new RobotMartien();
 
-  }  
+
+//methode appelée en thread par le programme principal
+void programmeJF()
+{
+robotmartien_JF.initialise();
+
+
+while (true){
+if (robotmartien_JF.obstacle())
+{
+robotmartien_JF.vitesse(0);
+delay( 1000 );
+robotmartien_JF.tourne(20);
+robotmartien_JF.vitesse(-100);
+delay( 1500 );
+robotmartien_JF.vitesse(0);
+robotmartien_JF.tourne(0);
+delay( 1000 );
 }
+else
+{
+robotmartien_JF.vitesse(100);
+}
+
+}
+}
+
 
