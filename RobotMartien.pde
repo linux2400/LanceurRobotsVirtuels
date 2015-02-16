@@ -93,15 +93,11 @@ public class RobotMartien {
 
   }
   public void vitesse(int V) {
-    noLoop();
     vitesse = V;
-    loop();
   }
   public void tourne(int _angle) {
-    noLoop();
     _angle = constrain(_angle,-18,18);
     angleRoues = constrain(radians(_angle), -PI/4.0, PI/4.0);
-    loop();
   }
   public boolean obstacle() {
     return (monde.testeCollision(faisceau));
