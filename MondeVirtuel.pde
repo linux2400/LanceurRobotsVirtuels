@@ -3,7 +3,24 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Iterator;
 
-public class MondeVirtuel {
+import java.io.File;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Position {
+  float x;
+  float y;
+  float Rz;
+  Position(float _x, float _y, float _Rz) {
+    x = _x;
+    y = _y;
+    Rz = _Rz;
+  }  
+}
+
+class MondeVirtuel {
   // pas de temps simulation
   float dt;
   float tprec, tactu;
@@ -12,28 +29,48 @@ public class MondeVirtuel {
   // position camera
   float r_camera, theta_camera, phi_camera;
   float x_camera, y_camera, z_camera;
-  // dimension du monde physique
-  int size_x, size_y;
-  PImage textureSol;
+  Solide environnement;
+  //PImage textureSol;
+  // l'applet processing dans lequel ce monde est charge
+  PApplet context;
   // les robots
   List<RobotMartien> robots;
   // les obstacles
   List<ObstacleMartien> obstacles;
+  // les positions de depart possibles pour les robots
+  List<Position> positions_robots;
   
   // constructeur
-  MondeVirtuel() {
+  public MondeVirtuel(PApplet _context) {
+    context = _context;
     robots = new LinkedList<RobotMartien>();
     obstacles = new LinkedList<ObstacleMartien>();  
   }
   
-  // initialisation du monde virtuel
-  void initialise(){
-    // taille du monde
-    size_x = 1200;
-    size_y = 1200;
-    textureSol = loadImage("data/textureSol.jpg");
-    textureMode(NORMAL);
-    // initialisation 3D, etc...
+  public PApplet context() {
+    return context; 
+  }
+  
+  private List<String> trouver_robots() {
+  // trouver tous les robots dans le repertoire sketch
+  File folder = new File(sketchPath);
+  File[] listOfFiles = folder.listFiles();
+  List<String> robots = new LinkedList<String>();
+  Pattern p = Pattern.compile("robot(.+).pde");
+  for(int i = 0; i < listOfFiles.length; i++)
+  {
+    Matcher m = p.matcher(listOfFiles[i].getName());
+    if(m.find())
+    {
+      robots.add(m.group(1));
+      println(m.group(1));
+    }
+  }
+  return robots;
+}
+
+  // initialisation du rendu 3D
+  void initialise_3d(){
     size(640, 480, P3D);
     fRate = 30;
     noStroke();    
@@ -47,24 +84,59 @@ public class MondeVirtuel {
     camera(x_camera, y_camera, z_camera, 0.0, 0.0, 0, 0, 0, -1.0);
     // vitesse affichage
     frameRate(fRate);
-    // pas de temps simulation
-    //dt = 1.0 / fRate;
+  }
+
+
+  // chargement du monde 
+  void charge_monde() {
+    // l'environnement
+    environnement = new SolideOBJ();
+    environnement.charge("data/mars1.obj",1/30.0); 
+   // les obstacles
+    ObstacleMartien caillou = new ObstacleMartien(0.0,0.0,5.0);
+    // les positions de depart possibles des robots
+    positions_robots = new ArrayList<Position>();
+    positions_robots.add(new Position(300,300,5*PI/4));
+    positions_robots.add(new Position(300,-300,3*PI/4));
+    positions_robots.add(new Position(-300,300,-PI/4));
+    positions_robots.add(new Position(-300,-300,PI/4));
+} 
+  
+  void initialise_robots() {
+    List<String> nom_robots = trouver_robots();
+    Iterator<String> it = nom_robots.iterator();
+    while(it.hasNext())
+    {
+      String s = it.next();
+      thread("programme" + s);
+      delay(10);
+      println(s);
+    }
+  }
+ 
+  void initialise() {
+    initialise_3d();
+    charge_monde();
+    initialise_robots();  
     tprec = millis();
   }
+  
   // fonction qui est appelle a chaque affichage
   void paint() {
     // avance la simu en temps
     Iterator<RobotMartien> iterator = robots.iterator();
+   tactu = millis();
+   dt = (tactu - tprec)/1000.0;
     while (iterator.hasNext()) {
-      // le test de collision se fait maintenant dans la fonction "deplace".
-      tactu = millis();
-      dt = (tactu - tprec)/1000.0;      
+      // le test de collision se fait maintenant dans la fonction "deplace".   
       iterator.next().deplace(dt);
-      tprec = tactu;
     }
+    tprec = tactu;
     // affiche les objets
     background(0);
-    lights();
+    //lights();
+    ambientLight(125, 100, 100);
+    directionalLight(150, 128, 128, 0, 1, -1);
     afficheSol();
     iterator = robots.iterator();
     while (iterator.hasNext()) {
@@ -76,13 +148,13 @@ public class MondeVirtuel {
     }
   }
 
-  boolean testeCollision(PolygoneConvexe enveloppe) {
+  boolean testeCollision(PolygoneConvexe test) {
     // test for collisions with obstacles
     Iterator<ObstacleMartien> iterator2 = obstacles.iterator();
     while(iterator2.hasNext())
     {
       ObstacleMartien o = iterator2.next();
-      if(enveloppe.intersecte(o.enveloppe))
+      if(test.intersecte(o.enveloppe))
       {
         return true;
       }        
@@ -93,7 +165,7 @@ public class MondeVirtuel {
     while(iterator3.hasNext())
     {
       RobotMartien o = iterator3.next();
-      if(o.enveloppe != enveloppe && o.faisceau != enveloppe && enveloppe.intersecte(o.enveloppe))
+      if(o.enveloppe != test && o.faisceau != test && test.intersecte(o.enveloppe))
       {
         return true;
       }        
@@ -129,27 +201,25 @@ public class MondeVirtuel {
   }
   // affichage du sol
   void afficheSol() {
-    beginShape();
-    texture(textureSol);
-    fill(255);
-    //rect(0, 0, size_x, size_y); // en fait on fait suivant x et z a cause du rotate
-    vertex(-size_x/2.0, -size_y/2.0, 0, 0);
-    vertex(size_x/2.0, -size_y/2.0, 1, 0);
-    vertex(size_x/2.0, size_y/2.0, 1, 1);
-    vertex(-size_x/2.0, size_y/2.0, 0, 1);
-    endShape(); 
+    lights();
+    environnement.affiche();
   }
   
   // ajouter un robot
   void ajoute(RobotMartien robot)
   {
-    robots.add(robot); 
+    if(robots.size() < positions_robots.size())
+    {
+      Position p = positions_robots.get(robots.size());
+      robot.position_initiale(p);
+      robots.add(robot);
+    }     
   }
   
   // ajouter un obstacle
   void ajoute(ObstacleMartien obstacle)
   {
-    obstacles.add(obstacle); 
+     obstacles.add(obstacle);
   }
 };
 

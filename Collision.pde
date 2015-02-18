@@ -242,6 +242,7 @@ public class PolygoneConvexe {
 
   public void affiche() {
     // affiche l'enveloppe au sol
+    noLights();
     beginShape();
     for(int j = 0; j < sommets.size(); j++)
     {

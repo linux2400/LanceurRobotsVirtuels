@@ -1,38 +1,20 @@
 
-
-public class triangleSTL {
-  float[][] s;
-  public triangleSTL(float _s1x, float _s1y, float _s1z, float _s2x, float _s2y, float _s2z, float _s3x, float _s3y, float _s3z) {
-    s = new float[3][3];
-    s[0][0] = _s1x;
-    s[0][1] = _s1y;
-    s[0][2] = _s1z;
-    s[1][0] = _s2x;
-    s[1][1] = _s2y;
-    s[1][2] = _s2z;
-    s[2][0] = _s3x;
-    s[2][1] = _s3y;
-    s[2][2] = _s3z;
-  }
-}
-
-public class solidSTL {
-  // le nom du solide
-  String nom;
+public class SolideSTL implements Solide {
   // la liste des triangles
   ArrayList<triangleSTL> listeTriangles;
   // facteur d'echelle
   float facteur;
   // le constructeur
-  public solidSTL() {
+  public SolideSTL() {
   }
-  public void chargeSTL(String fichier, float _facteur) {
+  
+  public void charge(String fichier, float _facteur) {
     // facteur
     facteur = _facteur;
     // charge le fichier
     String lines[] = loadStrings(fichier);
     int nTriangles = (lines.length-2)/7;
-    println("Il y a " + nTriangles + " triangles");
+    //println("Il y a " + nTriangles + " triangles");
     listeTriangles = new ArrayList<triangleSTL>();
     // pour chaque triange lit, cree et met dans les sommets
     int i0 = 3;
@@ -64,12 +46,14 @@ public class solidSTL {
     }      
   }
   // chargement du fichier  
-  public void chargeSTL(String fichier) {
-    chargeSTL(fichier, 1.0);
+  public void charge(String fichier) {
+    charge(fichier, 1.0);
   }
     
   // affichage du solide
   public void affiche() {
+    ambient(1.0);
+    emissive(0.0);
     // pour chaque triangle l'affiche
     for(int i=0; i<listeTriangles.size();i++)
     {
@@ -97,5 +81,24 @@ public class solidSTL {
     }  
     return new PolygoneConvexe(p);
   }  
+
+
+private class triangleSTL {
+  float[][] s;
+  public triangleSTL(float _s1x, float _s1y, float _s1z, float _s2x, float _s2y, float _s2z, float _s3x, float _s3y, float _s3z) {
+    s = new float[3][3];
+    s[0][0] = _s1x;
+    s[0][1] = _s1y;
+    s[0][2] = _s1z;
+    s[1][0] = _s2x;
+    s[1][1] = _s2y;
+    s[1][2] = _s2z;
+    s[2][0] = _s3x;
+    s[2][1] = _s3y;
+    s[2][2] = _s3z;
+  }
+}
+
+
 }
 

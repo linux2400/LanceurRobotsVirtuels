@@ -3,29 +3,28 @@ public class ObstacleMartien {
   // position
   float x,y,z;
   // geometrie
-  solidSTL obstacle3D;
+  Solide obstacle3D;
   // enveloppe
   public PolygoneConvexe enveloppe;
   
   // constructeur
-  public ObstacleMartien() {
-    
-  }
-
-  public void initialise(float _x, float _y, float _z) {
-   
+  public ObstacleMartien(float _x, float _y, float _z) {
     // chargement des fichiers
     float facteur = 2.0;   
-    obstacle3D = new solidSTL();
-    obstacle3D.chargeSTL("data/obstacle.stl", facteur);
+    obstacle3D = new SolideSTL();
+    obstacle3D.charge("data/obstacle.stl", facteur);
     // initialisation position, direction
     x = _x;
     y = _y;
     z = _z;
     enveloppe = obstacle3D.enveloppe(); 
     enveloppe.translate(x,y);
+    
+    monde.ajoute(this);
   }    
+  
   public void affiche() {
+    lights();
     fill(200);
     pushMatrix();
     translate(x, y, z);

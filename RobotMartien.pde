@@ -1,14 +1,13 @@
-
-public class RobotMartien {
+class RobotMartien {
   // position et direction
   float x,y,z, Rz;
   // vitesse et angle des roues
   float vitesse, angleRoues;
   // distance y roues avant
   float xRouesAvant, yRouesAvant; 
-  solidSTL corps3D;
-  solidSTL roueDroite3D;
-  solidSTL roueGauche3D;
+  Solide corps3D;
+  Solide roueDroite3D;
+  Solide roueGauche3D;
   // enveloppe
   public PolygoneConvexe enveloppe;
   // capteur de distance
@@ -17,28 +16,22 @@ public class RobotMartien {
   // constructeur
   public RobotMartien() {
     
-  }
+  }  
   
-  public void initialise()
-  {
-     initialise(0.0, -150.0, 0.0 , 90); 
-  }
-  
-  public void initialise(float _x, float _y, float _z, float _Rz) {
-  
+  public void initialise() {
     // chargement des fichiers
-    float facteur = 2.0;   
-    corps3D = new solidSTL();
-    corps3D.chargeSTL("data/corpsRobotDecentre.stl", facteur);
-    roueDroite3D = new solidSTL();
-    roueDroite3D.chargeSTL("data/roue.stl", facteur);
-    roueGauche3D = new solidSTL();
-    roueGauche3D.chargeSTL("data/roue.stl", facteur);
+    float facteur = 2.0;
+    corps3D = new SolideOBJ();
+    corps3D.charge("data/corpsRobotDecentre.obj", facteur);
+    roueDroite3D = new SolideOBJ();
+    roueDroite3D.charge("data/roue.obj", facteur);
+    roueGauche3D = new SolideOBJ();
+    roueGauche3D.charge("data/roue.obj", facteur);
     // initialisation position, direction
-    x = _x;
-    y = _y;
-    z = _z;
-    Rz = radians(_Rz);   
+    x = 0;
+    y = 0;
+    z = 0;
+    Rz = 0;   
     // initialisation vitesse et angle des roues
     vitesse = 0.;
     angleRoues = 0.0;
@@ -47,8 +40,6 @@ public class RobotMartien {
     
     // calcul du plus petit cube contenant le robot   
     enveloppe = corps3D.enveloppe().union(roueDroite3D.enveloppe()).union(roueGauche3D.enveloppe());
-    enveloppe.translate(x,y);
-    enveloppe.tourne(x,y,Rz);
     
     // construction du faisceau
     ArrayList<Point> f = new ArrayList<Point>(3);
@@ -56,15 +47,26 @@ public class RobotMartien {
     f.add(new Point(200,-80));
     f.add(new Point(200,80));
     faisceau = new PolygoneConvexe(f);
-    faisceau.translate(x,y);
-    faisceau.tourne(x,y,Rz);
     
     // ajouter le robot au monde
     monde.ajoute(this);
-    
+   
     delay(3000);
-  }    
+  }
+
+  public void position_initiale(Position p)
+  {
+    x = p.x;
+    y = p.y;
+    Rz = p.Rz;
+    enveloppe.translate(x,y);
+    enveloppe.tourne(x,y,Rz);
+    faisceau.translate(x,y);
+    faisceau.tourne(x,y,Rz);
+  }
+  
   public void affiche() {
+    lights();
     fill(200);
     pushMatrix();
     translate(x, y, z);
