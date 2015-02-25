@@ -3,11 +3,22 @@ class RobotMartien {
   float x,y,z, Rz;
   // vitesse et angle des roues
   float vitesse, angleRoues;
+  // angle du bras
+  float RBras;
+  // position d'attache du bras
+  float xBras, yBras, zBras;
+  // flags qui indiquent si le bras est en train de se deplier ou replier
+  boolean depliement_en_cours;
+  boolean repliement_en_cours;
+  // vitesse angulaire du bras
+  float omega_bras;
   // distance y roues avant
   float xRouesAvant, yRouesAvant; 
   Solide corps3D;
   Solide roueDroite3D;
   Solide roueGauche3D;
+  Solide bras13D;
+  Solide bras23D;
   // enveloppe
   public PolygoneConvexe enveloppe;
   // capteur de distance
@@ -27,6 +38,11 @@ class RobotMartien {
     roueDroite3D.charge("data/roue.obj", facteur);
     roueGauche3D = new SolideOBJ();
     roueGauche3D.charge("data/roue.obj", facteur);
+    bras13D = new SolideOBJ();
+    bras13D.charge("data/bras1.obj", facteur);
+    bras23D = new SolideOBJ();
+    bras23D.charge("data/bras2.obj", facteur);
+    
     // initialisation position, direction
     x = 0;
     y = 0;
@@ -37,7 +53,13 @@ class RobotMartien {
     angleRoues = 0.0;
     xRouesAvant = 2.0*80.0 / facteur;
     yRouesAvant = 40.0 / facteur;
-    
+    xBras = 150 / facteur; 
+    yBras = -30 / facteur;
+    zBras = 95 / facteur;
+    RBras = 0;
+    omega_bras = 1;
+    depliement_en_cours = false;
+    repliement_en_cours = false;
     // calcul du plus petit cube contenant le robot   
     enveloppe = corps3D.enveloppe().union(roueDroite3D.enveloppe()).union(roueGauche3D.enveloppe());
     
@@ -73,6 +95,12 @@ class RobotMartien {
     rotate(Rz);
     corps3D.affiche();
     pushMatrix();
+    translate(xBras,yBras,zBras);
+    rotate(RBras,0,1,0);
+    bras13D.affiche();
+    popMatrix();
+    //bras23D.affiche();
+    pushMatrix();
     translate(xRouesAvant, yRouesAvant);
     rotate(angleRoues);
     fill(200);
@@ -94,16 +122,6 @@ class RobotMartien {
     noFill();
 
   }
-  public void vitesse(int V) {
-    vitesse = V;
-  }
-  public void tourne(int _angle) {
-    _angle = constrain(_angle,-18,18);
-    angleRoues = constrain(radians(_angle), -PI/4.0, PI/4.0);
-  }
-  public boolean obstacle() {
-    return (monde.testeCollision(faisceau));
-}
   
   public void deplace(float dt) {
     // deplace entre t et t+dt
@@ -125,10 +143,47 @@ class RobotMartien {
       Rz += dRz;
       x += dx;
       y += dy;
-    } 
+    }
+   // depliement du bras
+  if(depliement_en_cours) 
+  {
+    if(RBras < PI)
+    {
+       RBras += dt*omega_bras;
+    }   
+  } else if(repliement_en_cours)
+ {
+    if(RBras > 0)
+    {
+       RBras -= dt*omega_bras;
+    }  
+ } 
+  
   }
   
+  // METHODES DES BLOCS
   
-  
+  public void vitesse(int V) {
+    vitesse = V;
+  }
+  public void tourne(int _angle) {
+    _angle = constrain(_angle,-18,18);
+    angleRoues = constrain(radians(_angle), -PI/4.0, PI/4.0);
+  }
+  public boolean obstacle() {
+    return (monde.testeCollision(faisceau));
+  }
+
+  public void deplier_bras()
+  {
+    depliement_en_cours = true;
+    repliement_en_cours = false;
+  }
+
+  public void replier_bras()
+  {
+    depliement_en_cours = false;
+    repliement_en_cours = true;
+  }  
 }
 

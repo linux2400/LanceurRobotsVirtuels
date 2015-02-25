@@ -3,6 +3,8 @@ MondeVirtuel monde = new MondeVirtuel(this);
 
 void setup() {
   monde.initialise();
+    // on attend que tous les robots soient initialises avant de lancer la simulation
+  noLoop();
 }
 
 void draw() {

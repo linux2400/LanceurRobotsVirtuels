@@ -35,16 +35,20 @@ class MondeVirtuel {
   PApplet context;
   // les robots
   List<RobotMartien> robots;
+  // le nombre de robots qui ont ete trouves
+  int nombre_de_robots;
   // les obstacles
   List<ObstacleMartien> obstacles;
   // les positions de depart possibles pour les robots
   List<Position> positions_robots;
+  boolean robots_ok;
   
   // constructeur
   public MondeVirtuel(PApplet _context) {
     context = _context;
     robots = new LinkedList<RobotMartien>();
-    obstacles = new LinkedList<ObstacleMartien>();  
+    obstacles = new LinkedList<ObstacleMartien>();
+    robots_ok = false;  
   }
   
   public PApplet context() {
@@ -55,18 +59,18 @@ class MondeVirtuel {
   // trouver tous les robots dans le repertoire sketch
   File folder = new File(sketchPath);
   File[] listOfFiles = folder.listFiles();
-  List<String> robots = new LinkedList<String>();
+  List<String> noms_robots = new LinkedList<String>();
   Pattern p = Pattern.compile("robot(.+).pde");
   for(int i = 0; i < listOfFiles.length; i++)
   {
     Matcher m = p.matcher(listOfFiles[i].getName());
     if(m.find())
     {
-      robots.add(m.group(1));
+      noms_robots.add(m.group(1));
       println(m.group(1));
     }
   }
-  return robots;
+  return noms_robots;
 }
 
   // initialisation du rendu 3D
@@ -104,6 +108,7 @@ class MondeVirtuel {
   
   void initialise_robots() {
     List<String> nom_robots = trouver_robots();
+    nombre_de_robots = nom_robots.size();
     Iterator<String> it = nom_robots.iterator();
     while(it.hasNext())
     {
@@ -123,6 +128,7 @@ class MondeVirtuel {
   
   // fonction qui est appelle a chaque affichage
   void paint() {
+    if(!robots_ok) return;
     // avance la simu en temps
     Iterator<RobotMartien> iterator = robots.iterator();
    tactu = millis();
@@ -208,12 +214,19 @@ class MondeVirtuel {
   // ajouter un robot
   void ajoute(RobotMartien robot)
   {
+    // on verifie si il reste de la place
     if(robots.size() < positions_robots.size())
     {
       Position p = positions_robots.get(robots.size());
       robot.position_initiale(p);
       robots.add(robot);
     }     
+    // si tous les robots ont ete charges, ou bien si tous les emplacements ont ete utilises, on lance la simu
+    if(robots.size() == nombre_de_robots || robots.size() == positions_robots.size())
+    {
+      robots_ok = true;
+      loop(); 
+    }
   }
   
   // ajouter un obstacle

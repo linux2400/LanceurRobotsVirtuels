@@ -16,6 +16,7 @@ while (true){
 if (robotmartien_JF.obstacle())
 {
 robotmartien_JF.vitesse(0);
+robotmartien_JF.deplier_bras();
 delay( 1000 );
 robotmartien_JF.tourne(20);
 robotmartien_JF.vitesse(-100);
@@ -26,7 +27,7 @@ delay( 1000 );
 }
 else
 {
-robotmartien_JF.vitesse(100);
+robotmartien_JF.vitesse(0);
 }
 
 }
