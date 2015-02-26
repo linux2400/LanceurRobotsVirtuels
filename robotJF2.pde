@@ -13,6 +13,7 @@ robotmartien_JF2.initialise();
 
 
 while (true){
+robotmartien_JF2.deplier_bras(); 
 if (robotmartien_JF2.obstacle())
 {
 robotmartien_JF2.vitesse(0);

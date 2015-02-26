@@ -5,6 +5,8 @@ class RobotMartien {
   float vitesse, angleRoues;
   // angle du bras
   float RBras;
+  // angle minimum et maximum du bras
+  float RBras_min, RBras_max;
   // position d'attache du bras
   float xBras, yBras, zBras;
   // flags qui indiquent si le bras est en train de se deplier ou replier
@@ -13,7 +15,10 @@ class RobotMartien {
   // vitesse angulaire du bras
   float omega_bras;
   // distance y roues avant
-  float xRouesAvant, yRouesAvant; 
+  float xRouesAvant, yRouesAvant;
+ // longueur du bras
+  float Lbras;
+  
   Solide corps3D;
   Solide roueDroite3D;
   Solide roueGauche3D;
@@ -53,10 +58,13 @@ class RobotMartien {
     angleRoues = 0.0;
     xRouesAvant = 2.0*80.0 / facteur;
     yRouesAvant = 40.0 / facteur;
+    Lbras = 100.0 / facteur;
     xBras = 150 / facteur; 
     yBras = -30 / facteur;
     zBras = 95 / facteur;
-    RBras = 0;
+    RBras = 10.0/180.0*PI;
+    RBras_min = RBras;
+    RBras_max = PI-PI/6;
     omega_bras = 1;
     depliement_en_cours = false;
     repliement_en_cours = false;
@@ -96,10 +104,14 @@ class RobotMartien {
     corps3D.affiche();
     pushMatrix();
     translate(xBras,yBras,zBras);
+    pushMatrix();
     rotate(RBras,0,1,0);
     bras13D.affiche();
     popMatrix();
-    //bras23D.affiche();
+    translate(-Lbras*cos(RBras),0,Lbras*sin(RBras));
+    bras23D.affiche();
+    popMatrix();
+    bras23D.affiche();
     pushMatrix();
     translate(xRouesAvant, yRouesAvant);
     rotate(angleRoues);
@@ -147,13 +159,13 @@ class RobotMartien {
    // depliement du bras
   if(depliement_en_cours) 
   {
-    if(RBras < PI)
+    if(RBras + dt*omega_bras <= RBras_max)
     {
        RBras += dt*omega_bras;
     }   
   } else if(repliement_en_cours)
  {
-    if(RBras > 0)
+    if(RBras-dt*omega_bras >= RBras_min)
     {
        RBras -= dt*omega_bras;
     }  
