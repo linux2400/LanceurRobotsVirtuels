@@ -10,7 +10,7 @@ public class ObstacleMartien {
   // constructeur
   public ObstacleMartien(float _x, float _y, float _z) {
     // chargement des fichiers
-    float facteur = 2.0;   
+    float facteur = 1.0;   
     obstacle3D = new SolideSTL();
     obstacle3D.charge("data/obstacle.stl", facteur);
     // initialisation position, direction

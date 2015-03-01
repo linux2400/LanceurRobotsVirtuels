@@ -75,12 +75,12 @@ class MondeVirtuel {
 
   // initialisation du rendu 3D
   void initialise_3d(){
-    size(640, 480, P3D);
+    size(800, 600, P3D);
     fRate = 30;
     noStroke();    
     // le sol est en Z=0. L'axe Z est dirige vers le haut de l'ecran
-    r_camera = 555.0;
-    phi_camera = PI/4;
+    r_camera = 800.0;
+    phi_camera = 4*PI/4;
     theta_camera = 1.1;
     x_camera = r_camera*sin(theta_camera)*cos(phi_camera);
     y_camera = r_camera*sin(theta_camera)*sin(phi_camera);
@@ -95,15 +95,15 @@ class MondeVirtuel {
   void charge_monde() {
     // l'environnement
     environnement = new SolideOBJ();
-    environnement.charge("data/mars1.obj",1/30.0); 
+    environnement.charge("data/mars1.obj",1/100.0); 
    // les obstacles
     ObstacleMartien caillou = new ObstacleMartien(0.0,0.0,5.0);
     // les positions de depart possibles des robots
     positions_robots = new ArrayList<Position>();
-    positions_robots.add(new Position(300,300,5*PI/4));
-    positions_robots.add(new Position(300,-300,3*PI/4));
-    positions_robots.add(new Position(-300,300,-PI/4));
-    positions_robots.add(new Position(-300,-300,PI/4));
+    positions_robots.add(new Position(600,600,5*PI/4));
+    positions_robots.add(new Position(600,-600,3*PI/4));
+    positions_robots.add(new Position(-600,600,PI/4));
+    positions_robots.add(new Position(600,600,PI/4));
 } 
   
   void initialise_robots() {
