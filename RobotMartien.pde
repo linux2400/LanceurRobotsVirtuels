@@ -83,12 +83,12 @@ class RobotMartien {
     yBras = -62.5 / facteur;
     zBras = (100+5+6.2+76/2) / facteur;
  
-    RBrasHaut = 20./180*PI;
+    RBrasHaut = 30./180*PI;
     
-    RBras = 48.0/180.0*PI;
+    RBras = 60.0/180.0*PI;
     RBras_min = RBras;
-    RBras_max = 140./180.*PI;
-    omega_bras = 1;
+    RBras_max = 150./180.*PI;
+    omega_bras = (RBras_max-RBras_min)/6;
     
     depliement_en_cours = false;
     repliement_en_cours = false;
@@ -122,7 +122,7 @@ class RobotMartien {
 
   public void affiche() {
     lights();
-    fill(200);
+    fill(220);
     pushMatrix();
     translate(x, y, z);
     rotate(Rz);
@@ -188,22 +188,30 @@ class RobotMartien {
       {
         RBras += dt*omega_bras;
       }
+      else
+      {
+       depliement_en_cours = false;
+      }
     } else if (repliement_en_cours)
     {
       if (RBras-dt*omega_bras >= RBras_min)
       {
         RBras -= dt*omega_bras;
       }
+      else
+      {
+       repliement_en_cours = false;
+      }
     }
   }
 
   // METHODES DES BLOCS
   public void avance() {
-    vitesse = 100;
+    vitesse = 167;
   }
 
   public void recule() {
-    vitesse = -100;
+    vitesse = -167;
   }
 
   public void arrete() {
@@ -236,12 +244,20 @@ class RobotMartien {
   {
     depliement_en_cours = true;
     repliement_en_cours = false;
+    while(depliement_en_cours) 
+    {
+      delay(50);
+    }
   }
 
   public void replier_bras()
   {
     depliement_en_cours = false;
     repliement_en_cours = true;
+    while(repliement_en_cours) 
+    {
+      delay(50);
+    }
   }
 }
 
