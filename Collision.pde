@@ -21,7 +21,7 @@ public class Point {
   public String toString() {
     return "(" + x[0] + "," + x[1] + ")";
   }
-
+  
   public void normaliser() {
     double norme = (double)(Math.sqrt(x[0]*x[0] + x[1]*x[1]));
     x[0] /= norme;

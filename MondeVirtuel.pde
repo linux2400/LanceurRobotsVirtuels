@@ -148,8 +148,9 @@ class MondeVirtuel {
     // affiche les objets
     background(0);
     //lights();
-    ambientLight(125, 100, 100);
-    directionalLight(150, 128, 128, 0, 1, -1);
+    ambientLight(200,200,200);
+    directionalLight(300, 240, 240, 0, 1, -1);
+    pointLight(100, 100, 100, 35, 40, 36);
     afficheSol();
     iterator = robots.iterator();
     while (iterator.hasNext()) {
@@ -227,7 +228,7 @@ class MondeVirtuel {
   }
   // affichage du sol
   void afficheSol() {
-    lights();
+    //lights();
     environnement.affiche();
   }
   
