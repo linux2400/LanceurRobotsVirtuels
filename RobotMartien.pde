@@ -31,6 +31,8 @@ class RobotMartien {
   public PolygoneConvexe enveloppe;
   // capteur de distance
   public PolygoneConvexe faisceau;
+  // senseur au bout du bras
+  public PolygoneConvexe senseur_bras;
 
   // constructeur
   public RobotMartien() {
@@ -39,20 +41,20 @@ class RobotMartien {
   public void initialise() {
     // chargement des fichiers
     float facteur = 1.0;
-    //corps3D = new SolideOBJ();
-    //corps3D.charge("data/corpsRobotDecentre.obj", facteur);
-    corps3D = new SolideSTL();
-    corps3D.charge("Robot_virtuel_V0_sans_roues.stl", facteur);
+    corps3D = new SolideOBJ();
+    corps3D.charge("data/modelRobotComplet.obj", facteur);
+    //corps3D = new SolideSTL();
+    //corps3D.charge("Robot_virtuel_V0_sans_roues.stl", facteur);
 
     //roueDroite3D = new SolideOBJ();
     //roueDroite3D.charge("data/roue.obj", facteur);
-    roueDroite3D = new SolideSTL();
-    roueDroite3D.charge("data/roue.stl", facteur);
+    roueDroite3D = new SolideOBJ();
+    roueDroite3D.charge("data/roue.obj", facteur);
 
     //roueGauche3D = new SolideOBJ();
     //roueGauche3D.charge("data/roue.obj", facteur);
-    roueGauche3D = new SolideSTL();
-    roueGauche3D.charge("data/roue.stl", facteur);
+    roueGauche3D = new SolideOBJ();
+    roueGauche3D.charge("data/roue.obj", facteur);
 
     //bras13D = new SolideOBJ();
     //bras13D.charge("data/bras1.obj", facteur);
@@ -96,12 +98,21 @@ class RobotMartien {
     enveloppe = corps3D.enveloppe().union(roueDroite3D.enveloppe()).union(roueGauche3D.enveloppe());
 
     // construction du faisceau
-    ArrayList<Point> f = new ArrayList<Point>(3);
+    ArrayList<Point> f = new ArrayList<Point>(4);
     f.add(new Point(315.0/2.0, 0));
     f.add(new Point(315.0/2.0, 5));
     f.add(new Point(315.0/2.+140, 30));
     f.add(new Point(315.0/2.+140, 40));
     faisceau = new PolygoneConvexe(f);
+
+    // senseur du bout du bras
+    ArrayList<Point> s = new ArrayList<Point>(3);
+    s.add(new Point(-15, -5));
+    s.add(new Point(-15, -15));
+    s.add(new Point(-5, -15));
+    s.add(new Point(-5, -5));
+    senseur_bras = new PolygoneConvexe(s);
+    senseur_bras.translate(xBras-Lbras*cos(RBras)+ Lbras*cos(RBrasHaut), yBras);
 
     // ajouter le robot au monde
     monde.ajoute(this);
@@ -118,10 +129,12 @@ class RobotMartien {
     enveloppe.tourne(x, y, Rz);
     faisceau.translate(x, y);
     faisceau.tourne(x, y, Rz);
+    senseur_bras.translate(x, y);
+    senseur_bras.tourne(x, y, Rz);
   }
 
   public void affiche() {
-    lights();
+//    lights();
     fill(220);
     pushMatrix();
     translate(x, y, z);
@@ -137,7 +150,7 @@ class RobotMartien {
     rotate(RBrasHaut, 0, 1, 0);
     bras23D.affiche();
     popMatrix();
-    bras23D.affiche();
+//    bras23D.affiche();
     pushMatrix();
     translate(xRouesAvant, yRouesAvant);
     rotate(angleRoues);
@@ -157,6 +170,8 @@ class RobotMartien {
     // affichage du faisceau en vert
     fill(0, 255, 0);
     faisceau.affiche();
+    fill(255, 0, 0);
+    senseur_bras.affiche();
     noFill();
   }
 
@@ -178,17 +193,20 @@ class RobotMartien {
     } else {
       // pas de collision
       faisceau.translate(dx, dy);
-      faisceau.tourne(x+dx, y+dy, dRz);      
+      faisceau.tourne(x+dx, y+dy, dRz);
+      senseur_bras.translate(dx, dy);
+      senseur_bras.tourne(x+dx, y+dy, dRz);      
       Rz += dRz;
       x += dx;
       y += dy;
     }
     // depliement du bras
+    double dRBras = 0;
     if (depliement_en_cours) 
     {
       if (RBras + dt*omega_bras <= RBras_max)
       {
-        RBras += dt*omega_bras;
+        dRBras = dt*omega_bras;
       }
       else
       {
@@ -198,12 +216,25 @@ class RobotMartien {
     {
       if (RBras-dt*omega_bras >= RBras_min)
       {
-        RBras -= dt*omega_bras;
+        dRBras = -dt*omega_bras;
       }
       else
       {
        repliement_en_cours = false;
       }
+    }
+    
+    if(dRBras != 0) {
+        double X = Lbras*cos(RBras) - Lbras*cos(RBrasHaut);
+        senseur_bras.translate(cos(Rz)*X, sin(Rz)*X);
+        RBras += dRBras;
+        X = -Lbras*cos(RBras) + Lbras*cos(RBrasHaut);
+        senseur_bras.translate(cos(Rz)*X, sin(Rz)*X);
+    }
+    
+    if(touche())
+    {
+       println("TOUCHE!"); 
     }
   }
 
@@ -276,6 +307,11 @@ class RobotMartien {
     {
       delay(50);
     }
+  }
+  
+  public boolean touche()
+  {
+     return monde.testeCollision(senseur_bras); 
   }
 }
 

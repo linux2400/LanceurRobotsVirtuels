@@ -23,10 +23,13 @@ public class SolideOBJ implements Solide {
   // affichage du solide
   public void affiche() {
     //scene.disableMaterial();
-    ambient(100,100,100);
-    emissive(50.0,50.0,50.0);
-    specular(100,100,100);
-    shininess(2.0);
+    //ambient(200,200,200);
+    //emissive(50.0,50.0,50.0);
+    //specular(100,100,100);
+    //shininess(2.0);
+    //lights();
+    //directionalLight(126, 126, 126, 0, 0, -1);
+    //ambientLight(51, 102, 126);
     scene.draw();
   }
   
