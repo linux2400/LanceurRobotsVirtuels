@@ -22,7 +22,7 @@ delay( 1000 );
 robotmartien_JF.deplier_bras();
 if (robotmartien_JF.brasTouche())
 {
-robotmartien_JF.recule();
+robotmartien_JF.reculeGauche();
 delay( 2000 );
 }
 else

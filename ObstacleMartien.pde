@@ -8,12 +8,13 @@ public class ObstacleMartien {
   public PolygoneConvexe enveloppe;
   
   // constructeur
-  public ObstacleMartien(float _x, float _y, float _z) {
+  public ObstacleMartien(String fichier, float _x, float _y, float _z) {
     // chargement des fichiers
     float facteur = 1.0;   
-    obstacle3D = new SolideOBJ();
+    //obstacle3D = new SolideOBJ();
+    obstacle3D = new SolideSTL();
     //obstacle3D.charge("data/obstacle.stl", facteur);
-    obstacle3D.charge("data/cube.obj", facteur);
+    obstacle3D.charge("data/" + fichier, facteur);
     // initialisation position, direction
     x = _x;
     y = _y;
@@ -25,8 +26,8 @@ public class ObstacleMartien {
   }    
   
   public void affiche() {
-    //lights();
-    //fill(200);
+    lights();
+    fill(100,14,14);
     pushMatrix();
     translate(x, y, z);
     obstacle3D.affiche();
