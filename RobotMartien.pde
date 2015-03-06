@@ -90,7 +90,7 @@ class RobotMartien {
     RBras = 60.0/180.0*PI;
     RBras_min = RBras;
     RBras_max = 150./180.*PI;
-    omega_bras = (RBras_max-RBras_min)/6;
+    omega_bras = (RBras_max-RBras_min)/5;
     
     depliement_en_cours = false;
     repliement_en_cours = false;
@@ -101,8 +101,8 @@ class RobotMartien {
     ArrayList<Point> f = new ArrayList<Point>(4);
     f.add(new Point(315.0/2.0, 0));
     f.add(new Point(315.0/2.0, 5));
-    f.add(new Point(315.0/2.+140, 30));
-    f.add(new Point(315.0/2.+140, 40));
+    f.add(new Point(315.0/2.+110, 30));
+    f.add(new Point(315.0/2.+110, 40));
     faisceau = new PolygoneConvexe(f);
 
     // senseur du bout du bras
