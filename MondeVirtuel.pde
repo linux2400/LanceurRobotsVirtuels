@@ -29,6 +29,8 @@ class MondeVirtuel {
   // position camera
   float r_camera, theta_camera, phi_camera;
   float x_camera, y_camera, z_camera;
+  // point ou la camera pointe
+  float x_cam_cible, y_cam_cible, z_cam_cible;
   Solide environnement;
   //PImage textureSol;
   // l'applet processing dans lequel ce monde est charge
@@ -85,7 +87,11 @@ class MondeVirtuel {
     x_camera = r_camera*sin(theta_camera)*cos(phi_camera);
     y_camera = r_camera*sin(theta_camera)*sin(phi_camera);
     z_camera = r_camera*cos(theta_camera);
-    camera(x_camera, y_camera, z_camera, 0.0, 0.0, 0, 0, 0, -1.0);
+    
+    x_cam_cible = 0.0;
+    y_cam_cible = 0.0;
+    z_cam_cible = 0.0;
+    camera(x_camera, y_camera, z_camera, x_cam_cible, y_cam_cible, z_cam_cible, 0, 0, -1.0);
     // vitesse affichage
     frameRate(fRate);
   }
@@ -184,15 +190,28 @@ class MondeVirtuel {
   
   // evenements souris
   void onMouseDragged() {
-    float rate = 0.005;
-    phi_camera -= (pmouseX-mouseX) * rate;
-    phi_camera = phi_camera % (2*PI);    
-    theta_camera += (pmouseY-mouseY) * rate;
-    theta_camera = constrain(theta_camera, 0.0001, PI/2.0-0.001);
-    x_camera = r_camera*sin(theta_camera)*cos(phi_camera);
-    y_camera = r_camera*sin(theta_camera)*sin(phi_camera);
-    z_camera = r_camera*cos(theta_camera);
-    camera(x_camera, y_camera, z_camera, 0.0, 0.0, 0, 0, 0, -1.0);
+    if(mouseButton == LEFT)
+    {
+      float rate = 0.005;
+      phi_camera -= (pmouseX-mouseX) * rate;
+      phi_camera = phi_camera % (2*PI);    
+      theta_camera += (pmouseY-mouseY) * rate;
+      theta_camera = constrain(theta_camera, 0.0001, PI/2.0-0.001);
+      x_camera = r_camera*sin(theta_camera)*cos(phi_camera) + x_cam_cible;
+      y_camera = r_camera*sin(theta_camera)*sin(phi_camera) + y_cam_cible;
+      z_camera = r_camera*cos(theta_camera) + z_cam_cible;
+      camera(x_camera, y_camera, z_camera, x_cam_cible, y_cam_cible, z_cam_cible, 0, 0, -1.0);
+    } else
+    {
+      float perpx = -(y_cam_cible-y_camera);
+      float perpy = (x_cam_cible-x_camera);
+      float rate = 0.002;
+      x_cam_cible += (pmouseX-mouseX) * perpx * rate;
+      y_cam_cible += (pmouseY-mouseY) * perpy * rate;
+      x_camera += (pmouseX-mouseX) * perpx * rate;
+      y_camera += (pmouseY-mouseY) * perpy * rate;
+      camera(x_camera, y_camera, z_camera, x_cam_cible, y_cam_cible, z_cam_cible, 0, 0, -1.0);      
+    }
   }
   void onMouseWheel(float e) {
     float rate = 0.01;
@@ -201,10 +220,10 @@ class MondeVirtuel {
     } else {
       r_camera = r_camera/(1+abs(e)*rate);
     }
-    x_camera = r_camera*sin(theta_camera)*cos(phi_camera);
-    y_camera = r_camera*sin(theta_camera)*sin(phi_camera);
-    z_camera = r_camera*cos(theta_camera);
-    camera(x_camera, y_camera, z_camera, 0.0, 0.0, 0, 0, 0, -1.0);    
+    x_camera = r_camera*sin(theta_camera)*cos(phi_camera) + x_cam_cible;
+    y_camera = r_camera*sin(theta_camera)*sin(phi_camera) + y_cam_cible;
+    z_camera = r_camera*cos(theta_camera) + z_cam_cible;
+    camera(x_camera, y_camera, z_camera, x_cam_cible, y_cam_cible, z_cam_cible, 0, 0, -1.0);      
   }
   // affichage du sol
   void afficheSol() {

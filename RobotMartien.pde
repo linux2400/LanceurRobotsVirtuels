@@ -80,7 +80,7 @@ class RobotMartien {
     Lbras = 168.0 / facteur;
     
     xBras = (315/2-23) / facteur; 
-    yBras = -62.5 / facteur;
+    yBras = 62.5 / facteur;
     zBras = (100+5+6.2+76/2) / facteur;
  
     RBrasHaut = 30./180*PI;

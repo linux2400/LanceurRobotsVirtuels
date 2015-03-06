@@ -42,7 +42,7 @@ public class SolideSTL implements Solide {
       float s3z = float(infosS3[3]) / facteur;
             
       // ajoute le triangle    
-      listeTriangles.add(new triangleSTL(s1x,s1y,s1z,s2x,s2y,s2z,s3x,s3y,s3z));
+      listeTriangles.add(new triangleSTL(s1x,-s1y,s1z,s2x,-s2y,s2z,s3x,-s3y,s3z));
     }      
   }
   // chargement du fichier  
