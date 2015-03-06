@@ -1,7 +1,7 @@
 class RobotMartien {
   // position et direction
   float x, y, z, Rz;
-  // vitesse et angle des roues
+  // vitesse et angle des roues avant
   float vitesse, angleRoues;
 
   // angle du bras bas
@@ -163,8 +163,10 @@ class RobotMartien {
   public void deplace(float dt) {
     // deplace entre t et t+dt
     double dRz = dt * sin(angleRoues) * vitesse / xRouesAvant;
-    double dx = vitesse*cos(Rz)*dt;
-    double dy = vitesse*sin(Rz)*dt; 
+    float VG = vitesse * sqrt(pow(cos(angleRoues),2) + 0.25*pow(sin(angleRoues),2));
+    float beta = atan(1/2*tan(angleRoues));
+    double dx = VG*cos(Rz+beta)*dt;
+    double dy = VG*sin(Rz+beta)*dt; 
     // translation de l'enveloppe
     enveloppe.translate(dx, dy);
     enveloppe.tourne(x+dx, y+dy, dRz);
@@ -207,27 +209,43 @@ class RobotMartien {
 
   // METHODES DES BLOCS
   public void avance() {
+    tourne(0);
     vitesse = 167;
   }
 
   public void recule() {
+    tourne(0);
     vitesse = -167;
   }
 
   public void arrete() {
+    tourne(0);
     vitesse = 0;
   }
   
-  public void tourneDroite()
+  public void avanceDroite()
   {
+    vitesse = 167;
     tourne(18);
   }
 
-  void tourneGauche()
+  void avanceGauche()
   {
+    vitesse = 167;
     tourne(-18);  
   }
 
+  public void reculeDroite()
+  {
+    vitesse = -167;
+    tourne(18);
+  }
+
+  void reculeGauche()
+  {
+    vitesse = -167;
+    tourne(-18);  
+  }
 
   public void vitesse(int V) {
     vitesse = V;

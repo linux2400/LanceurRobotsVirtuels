@@ -18,13 +18,16 @@ robotmartien_JF.avance();
 }
 
 robotmartien_JF.arrete();
-robotmartien_JF.deplier_bras();
-delay( 1000 );
-robotmartien_JF.replier_bras();
 delay( 1000 );
 robotmartien_JF.recule();
-robotmartien_JF.tourneDroite();
-delay( 2000 );
+delay( 500 );
+robotmartien_JF.arrete();
+
+robotmartien_JF.deplier_bras();
+robotmartien_JF.replier_bras();
+//robotmartien_JF.tourneDroite();
+robotmartien_JF.avance();
+delay( 3000 );
 
 }
 }

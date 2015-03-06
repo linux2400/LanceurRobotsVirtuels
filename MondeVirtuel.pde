@@ -67,7 +67,7 @@ class MondeVirtuel {
     if(m.find())
     {
       noms_robots.add(m.group(1));
-      println(m.group(1));
+      //println(m.group(1));
     }
   }
   return noms_robots;
@@ -79,9 +79,9 @@ class MondeVirtuel {
     fRate = 30;
     noStroke();    
     // le sol est en Z=0. L'axe Z est dirige vers le haut de l'ecran
-    r_camera = 800.0;
-    phi_camera = 4*PI/4;
-    theta_camera = 1.1;
+    r_camera = 2000.0;
+    phi_camera = 1.2*PI/2.;
+    theta_camera = PI/3.;
     x_camera = r_camera*sin(theta_camera)*cos(phi_camera);
     y_camera = r_camera*sin(theta_camera)*sin(phi_camera);
     z_camera = r_camera*cos(theta_camera);
@@ -97,10 +97,11 @@ class MondeVirtuel {
     environnement = new SolideOBJ();
     environnement.charge("data/mars1.obj",1/100.0); 
    // les obstacles
-    ObstacleMartien caillou = new ObstacleMartien(0.0,0.0,5.0);
+    //ObstacleMartien caillou = new ObstacleMartien(0.0,0.0,5.0);
+    ObstacleMartien caillou = new ObstacleMartien(0.0,0.0,0.0);
     // les positions de depart possibles des robots
     positions_robots = new ArrayList<Position>();
-    positions_robots.add(new Position(600,600,5*PI/4));
+    positions_robots.add(new Position(-1000,0,0));
     positions_robots.add(new Position(600,-600,3*PI/4));
     positions_robots.add(new Position(-600,600,PI/4));
     positions_robots.add(new Position(600,600,PI/4));
