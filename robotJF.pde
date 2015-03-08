@@ -12,30 +12,20 @@ void programmeJF()
 robotmartien_JF.initialise();
 
 while (true){
-while ( !( robotmartien_JF.obstacle() ) )
-{
 robotmartien_JF.avance();
-}
-
+delay( 2500 );
 robotmartien_JF.arrete();
-delay( 1000 );
+delay( 5000 );
 robotmartien_JF.deplier_bras();
-if (robotmartien_JF.brasTouche())
-{
-robotmartien_JF.reculeGauche();
-delay( 2000 );
-}
-else
-{
-robotmartien_JF.reculeDroite();
-delay( 2000 );
-}
-robotmartien_JF.arrete();
-robotmartien_JF.replier_bras();
-if (robotmartien_JF.brasTouche())
-{
-robotmartien_JF.reculeGauche();
 delay( 1000 );
+robotmartien_JF.recule();
+delay( 2500 );
+if (robotmartien_JF.brasTouche())
+{
+robotmartien_JF.recule();
+delay( 1000 );
+robotmartien_JF.replier_bras();
+delay( 1 );
 }
 
 }

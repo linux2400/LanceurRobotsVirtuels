@@ -103,12 +103,12 @@ class MondeVirtuel {
     environnement = new SolideOBJ();
     environnement.charge("data/mars1.obj",1/100.0); 
    // les obstacles
-    ObstacleMartien triangle1 = new ObstacleMartien("triangle.stl",-800,-800,0.0);
-    ObstacleMartien triangle2 = new ObstacleMartien("triangle.stl",-800,800,0.0);
-    ObstacleMartien triangle3 = new ObstacleMartien("triangle.stl",800,-800,0.0);
-    ObstacleMartien triangle4 = new ObstacleMartien("triangle.stl",800,800,0.0);
+    //ObstacleMartien triangle1 = new ObstacleMartien("triangle.stl",-800,-800,0.0);
+    //ObstacleMartien triangle2 = new ObstacleMartien("triangle.stl",-800,800,0.0);
+    //ObstacleMartien triangle3 = new ObstacleMartien("triangle.stl",800,-800,0.0);
+    //ObstacleMartien triangle4 = new ObstacleMartien("triangle.stl",800,800,0.0);
     ObstacleMartien caillou1 = new ObstacleMartien("Caillou_long.stl",800,0,0);
-    ObstacleMartien caillou2 = new ObstacleMartien("Caillou_penche.stl",600,600,0);
+    //ObstacleMartien caillou2 = new ObstacleMartien("Caillou_penche.stl",600,600,0);
 
 
     // les positions de depart possibles des robots

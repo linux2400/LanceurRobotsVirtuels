@@ -28,7 +28,7 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd texturePlaqu.png
+map_Kd texturePlaqu.jpg
 
 
 newmtl Material.005
@@ -38,7 +38,7 @@ Kd 0.594640 0.594640 0.594640
 Ks 0.346912 0.346912 0.346912
 Ni 1.000000
 d 1.000000
-illum 2
+illum 0
 
 
 newmtl Material.005_texturePlaqu.png
@@ -48,7 +48,7 @@ Kd 0.594640 0.594640 0.594640
 Ks 0.346912 0.346912 0.346912
 Ni 1.000000
 d 1.000000
-illum 2
-map_Kd texturePlaqu.png
+illum 0
+map_Kd texturePlaqu.jpg
 
 
