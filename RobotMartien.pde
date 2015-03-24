@@ -20,6 +20,8 @@ class RobotMartien extends Robot {
   float xRouesAvant, yRouesAvant;
   // longueur du bras
   float Lbras;
+  
+  boolean aTouche;
 
   Solide corps3D;
   Solide roueDroite3D;
@@ -71,10 +73,13 @@ class RobotMartien extends Robot {
     xRouesAvant = 115.0 / facteur;
     yRouesAvant = (125+32.5)/2.0 / facteur;
     
+    // pas d'obstacle encore touché par le bras
+    aTouche = false;
+    
     Lbras = 168.0 / facteur;
     
     xBras = (315/2-23) / facteur; 
-    yBras = -62.5 / facteur;
+    yBras = 62.5 / facteur;
     zBras = (100+5+6.2+76/2) / facteur;
  
     RBrasHaut = 30./180*PI;
@@ -190,6 +195,7 @@ class RobotMartien extends Robot {
     {
       if (RBras + dt*omega_bras <= RBras_max)
       {
+        aTouche = touche();
         dRBras = dt*omega_bras;
       }
       else
@@ -215,11 +221,12 @@ class RobotMartien extends Robot {
         X = -Lbras*cos(RBras) + Lbras*cos(RBrasHaut);
         senseur_bras.translate(cos(Rz)*X, sin(Rz)*X);
     }
-    
+    /*
     if(touche())
     {
        println("TOUCHE!"); 
     }
+    */
   }
 
   // METHODES DES BLOCS
@@ -285,6 +292,7 @@ class RobotMartien extends Robot {
 
   public void replier_bras()
   {
+    aTouche = false;
     depliement_en_cours = false;
     repliement_en_cours = true;
     while(repliement_en_cours) 
@@ -292,6 +300,12 @@ class RobotMartien extends Robot {
       delay(50);
     }
   }
+
+  public boolean brasTouche()
+  {
+     return aTouche; 
+  }
+
   
   public boolean touche()
   {
