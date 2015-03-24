@@ -1,5 +1,5 @@
 
-MondeVirtuel monde = new MondeVirtuel(this);
+MondeVirtuel monde = charger_monde(this,"");
 
 void setup() {
   monde.initialise();

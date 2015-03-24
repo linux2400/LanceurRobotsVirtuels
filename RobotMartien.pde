@@ -1,9 +1,8 @@
-class RobotMartien {
-  // position et direction
-  float x, y, z, Rz;
+/** Un robot d'exploration martien.
+*/
+class RobotMartien extends Robot {
   // vitesse et angle des roues avant
   float vitesse, angleRoues;
-
   // angle du bras bas
   float RBras;
   // angle minimum et maximum du bras
@@ -27,8 +26,7 @@ class RobotMartien {
   Solide roueGauche3D;
   Solide bras13D;
   Solide bras23D;
-  // enveloppe
-  public PolygoneConvexe enveloppe;
+
   // capteur de distance
   public PolygoneConvexe faisceau;
   // senseur au bout du bras
@@ -66,15 +64,9 @@ class RobotMartien {
     bras23D = new SolideSTL();
     bras23D.charge("data/brasHaut.stl", facteur);
 
-    // initialisation position, direction
-    x = 0;
-    y = 0;
-    z = 0;
-    Rz = 0;   
     // initialisation vitesse et angle des roues
     vitesse = 0.;
-    angleRoues = 0.0;
-    
+    angleRoues = 0.0; 
     
     xRouesAvant = 115.0 / facteur;
     yRouesAvant = (125+32.5)/2.0 / facteur;
@@ -114,19 +106,12 @@ class RobotMartien {
     senseur_bras = new PolygoneConvexe(s);
     senseur_bras.translate(xBras-Lbras*cos(RBras)+ Lbras*cos(RBrasHaut), yBras);
 
-    // ajouter le robot au monde
-    monde.ajoute(this);
-
-    delay(3000);
+    super.initialise();
   }
 
   public void position_initiale(Position p)
   {
-    x = p.x;
-    y = p.y;
-    Rz = p.Rz;
-    enveloppe.translate(x, y);
-    enveloppe.tourne(x, y, Rz);
+    super.position_initiale(p);
     faisceau.translate(x, y);
     faisceau.tourne(x, y, Rz);
     senseur_bras.translate(x, y);
@@ -134,7 +119,6 @@ class RobotMartien {
   }
 
   public void affiche() {
-//    lights();
     fill(220);
     pushMatrix();
     translate(x, y, z);
@@ -185,7 +169,7 @@ class RobotMartien {
     // translation de l'enveloppe
     enveloppe.translate(dx, dy);
     enveloppe.tourne(x+dx, y+dy, dRz);
-    if (monde.testeCollision(enveloppe))
+    if (monde.testeCollision(this,enveloppe))
     {
       // collision! pas de deplacement
       enveloppe.tourne(x+dx, y+dy, -dRz);
@@ -286,7 +270,7 @@ class RobotMartien {
     angleRoues = constrain(radians(_angle), -PI/4.0, PI/4.0);
   }
   public boolean obstacle() {
-    return (monde.testeCollision(faisceau));
+    return (monde.testeCollision(this,faisceau));
   }
 
   public void deplier_bras()
@@ -311,7 +295,7 @@ class RobotMartien {
   
   public boolean touche()
   {
-     return monde.testeCollision(senseur_bras); 
+     return monde.testeCollision(this,senseur_bras); 
   }
 }
 
