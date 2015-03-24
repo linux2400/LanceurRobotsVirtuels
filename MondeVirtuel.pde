@@ -258,5 +258,10 @@ abstract class MondeVirtuel {
   {
      obstacles.add(obstacle);
   }
+  
+  void pas_de_temps()
+  {
+    
+  }
 };
 

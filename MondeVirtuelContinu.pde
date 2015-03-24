@@ -39,6 +39,7 @@ class MondeVirtuelContinu extends MondeVirtuel {
     positions_robots.add(new Position(-600,600,PI/4));
     positions_robots.add(new Position(600,600,PI/4));
 } 
+
   // fonction qui est appelle a chaque affichage
   void simule() {
     // avance la simu en temps
